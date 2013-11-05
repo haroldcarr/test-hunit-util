@@ -1,0 +1,9 @@
+test-hunit-util
+
+Haskell Test.HUnit utilities
+
+- =teq= : test for equality  : returns =Test=
+- =ter= : test for exception : returns =Test-
+- =t=   : test for equality  : returns =[Test]=
+- -tt=  : test multiple expressions for equality : returns =[Test]=
+
