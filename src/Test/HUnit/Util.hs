@@ -1,14 +1,16 @@
 {-
 Created       : 2013 Sep 28 (Sat) 09:01:51 by carr.
-Last Modified : 2014 Feb 17 (Mon) 21:35:53 by Harold Carr.
+Last Modified : 2014 Feb 17 (Mon) 21:43:54 by Harold Carr.
 -}
 
 module Test.HUnit.Util
     (
-     t
-    ,teq
-    ,ter
-    ,tt
+      e
+    , ee
+    , t
+    , teq
+    , ter
+    , tt
     ) where
 
 import Control.Exception (ErrorCall(ErrorCall), evaluate, try, Exception)
