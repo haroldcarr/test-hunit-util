@@ -1,6 +1,6 @@
 {-
 Created       : 2013 Sep 28 (Sat) 09:01:51 by carr.
-Last Modified : 2013 Nov 04 (Mon) 20:50:13 by carr.
+Last Modified : 2014 Feb 17 (Mon) 21:35:53 by Harold Carr.
 -}
 
 module Test.HUnit.Util
@@ -57,5 +57,12 @@ t testName actual = tt testName [actual]
 -- Given a list of expressions, check they all evaluate to the same thing.
 tt :: (Eq a) => (Show a) => String -> [a] -> a -> [Test]
 tt testName actuals expected = map (\actual -> teq testName actual expected) actuals
+
+-- Given an expression, check that it raises the expected error.
+e :: (Eq a) => (Show a) => String -> a -> String -> [Test]
+e testName actual = ee testName [actual]
+
+ee :: (Eq a) => (Show a) => String -> [a] -> String -> [Test]
+ee testName actuals expected = map (\actual -> ter testName actual expected) actuals
 
 -- End of file.
