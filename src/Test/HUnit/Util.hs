@@ -1,6 +1,6 @@
 {-
 Created       : 2013 Sep 28 (Sat) 09:01:51 by carr.
-Last Modified : 2014 Feb 17 (Mon) 21:43:54 by Harold Carr.
+Last Modified : 2016 Mar 06 (Sun) 12:03:04 by Harold Carr.
 -}
 
 module Test.HUnit.Util
@@ -14,9 +14,9 @@ module Test.HUnit.Util
     ) where
 
 import Control.Exception (ErrorCall(ErrorCall), evaluate, try, Exception)
-import Test.HUnit
-import Test.HUnit.Base   ((~?=), Test(TestCase, TestList))
-import Test.HUnit.Text   (runTestTT)
+import Control.Monad     (unless)
+import Test.HUnit        (assertEqual, assertFailure)
+import Test.HUnit.Base   (Test(TestCase))
 
 ------------------------------------------------------------------------------
 -- import Test.HUnit.Tools  (assertRaises) -- cabal install testpack
@@ -25,20 +25,21 @@ import Test.HUnit.Text   (runTestTT)
 assertRaises :: (Show a, Control.Exception.Exception e, Show e, Eq e) =>
                 String -> e -> IO a -> IO ()
 assertRaises msg selector action =
-    let thetest e = if e == selector then return ()
-                    else assertFailure $ msg ++ "\nReceived unexpected exception: "
-                             ++ (show e) ++ "\ninstead of exception: " ++ (show selector)
-        in do
-           r <- Control.Exception.try action
-           case r of
-                  Left e -> thetest e
-                  Right _ -> assertFailure $ msg ++ "\nReceived no exception, but was expecting exception: " ++ (show selector)
+    let thetest ex = unless (ex == selector)
+                        $ assertFailure $ msg ++ "\nReceived unexpected exception: "
+                                              ++ show ex ++ "\ninstead of exception: " ++ show selector
+    in do
+        r <- Control.Exception.try action
+        case r of
+            Left  ex -> thetest ex
+            Right _  -> assertFailure $ msg ++ "\nReceived no exception, but was expecting exception: " ++ show selector
 
 ------------------------------------------------------------------------------
 -- http://stackoverflow.com/questions/13350164/how-do-i-test-for-an-error-in-haskell
-instance Eq ErrorCall where
-    x == y = show x == show y
+-- instance Eq ErrorCall where
+--    x == y = show x == show y
 
+assertError :: Show a => String -> String -> a -> IO ()
 assertError msg ex f =
     assertRaises msg (ErrorCall ex) $ evaluate f
 
